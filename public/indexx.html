@@ -1,0 +1,46 @@
+<!-- Contáctanos -->
+<section id="contacto" class="bg-[#445B83] text-white py-12">
+    <div class="container mx-auto">
+      <h3 class="text-2xl font-bold text-center">Contáctanos</h3>
+      <form action="/guardar" method="POST" class="mt-8 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-900">
+        <div class="mb-4">
+          <label for="nombre" class="block font-bold">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" class="w-full p-2 border rounded" required>
+        </div>
+        <div class="mb-4">
+          <label for="correo" class="block font-bold">Correo:</label>
+          <input type="email" id="correo" name="correo" class="w-full p-2 border rounded" required>
+        </div>
+        <div class="mb-4">
+          <label for="telefono" class="block font-bold">Teléfono:</label>
+          <input type="tel" id="telefono" name="telefono" class="w-full p-2 border rounded">
+        </div>
+        <div class="mb-4">
+          <label for="fecha" class="block font-bold">Fecha y Hora:</label>
+          <input type="datetime-local" id="fecha" name="fecha" class="w-full p-2 border rounded">
+        </div>
+        <button type="submit" class="w-full bg-[#2D5080] hover:bg-[#435B83] text-white py-2 rounded">
+          Enviar
+        </button>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 py-6 text-center">
+    <p>&copy; 2025 Taxander 🚀. Todos los derechos reservados.</p>
+    <a href="#" class="text-white">Política de privacidad</a> | 
+    <a href="#" class="text-white">Términos legales</a>
+  </footer>
+  
+  <!-- Script for AOS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  </script>
+  </body>
+  </html>
+  

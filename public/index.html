@@ -1,0 +1,402 @@
+!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Taxander: Servicio de declaración de impuestos para la comunidad latina joven en EE.UU. Fácil, flexible y económico. Reserva tu cita ahora!">
+  <title>Taxander 🚀 - Tu aliado en declaración de impuestos</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- AOS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Header y Scroll */
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background-color: #445B83;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .header.scrolled {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    /* Logo con esquinas curvas y sombra flotante */
+    .logo-container img {
+      height: 90px;  /* 40% más pequeño respecto a 150px */
+      width: 120px;  /* 40% más pequeño respecto a 200px */
+      border-radius: 20px; 
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logo-container img:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .logo-container h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin-left: 10px;
+      animation: float 2s infinite ease-in-out;
+    }
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Overlay: modal con fondo visible */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .overlay.active {
+      display: flex;
+    }
+
+    /* Modal */
+    .modal {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close-btn {
+      background-color: #2D5080;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .close-btn:hover {
+      background-color: #435B83;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+  <!-- Header -->
+  <header class="header">
+    <div class="container mx-auto flex justify-between items-center py-4 px-4">
+      <div class="logo-container flex items-center">
+        <img src="images/logo.png" alt="Taxander Logo">
+        <h1 class="font-bold">Taxander 🚀</h1>
+      </div>
+      <a href="#contacto" class="bg-[#2D5080] hover:bg-[#435B83] text-white py-2 px-4 rounded shadow-lg">
+        ¡Reserva tu cita ahora!
+      </a>
+    </div>
+  </header>
+
+  <!-- Servicios Destacados -->
+  <section class="container mx-auto py-20 pt-32" data-aos="fade-up">
+    <h3 class="text-2xl font-bold text-center">Servicios Destacados</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8" data-aos="fade-up" data-aos-delay="200">
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer transform hover:scale-105 transition duration-300" onclick="showOverlay('individual')">
+        <img src="images/i2.jpg" alt="Declaraciones Individuales" class="mx-auto mb-4">
+        <h4 class="font-bold">Declaraciones Individuales</h4>
+        <p class="mt-4">Rápidas y efectivas para maximizar tu reembolso. 📝</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer transform hover:scale-105 transition duration-300" onclick="showOverlay('corporativas')">
+        <img src="images/i3.jpg" alt="Declaraciones Corporativas" class="mx-auto mb-4">
+        <h4 class="font-bold">Declaraciones Corporativas</h4>
+        <p class="mt-4">Optimiza tus impuestos empresariales con expertos. 📈</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer transform hover:scale-105 transition duration-300" onclick="showOverlay('problemas')">
+        <img src="images/i4.jpg" alt="Resolución de Problemas" class="mx-auto mb-4">
+        <h4 class="font-bold">Resolución de Problemas con el IRS</h4>
+        <p class="mt-4">Soluciones rápidas y efectivas para tus notificaciones. 🚨</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer transform hover:scale-105 transition duration-300" onclick="showOverlay('planeacion')">
+        <img src="images/i5.jpg" alt="Planeación Fiscal" class="mx-auto mb-4">
+        <h4 class="font-bold">Planeación Fiscal</h4>
+        <p class="mt-4">Planifica tu futuro financiero con estrategias inteligentes. 📊</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overlay Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h4 class="font-bold text-xl mb-2" id="overlay-title"></h4>
+      <p class="mt-4 text-justify" id="overlay-content"></p>
+      <button class="close-btn" onclick="hideOverlay()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Script Scroll Header -->
+  <script>
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+
+  <!-- Script Overlay -->
+  <script>
+    const overlay = document.getElementById('overlay');
+    const overlayTitle = document.getElementById('overlay-title');
+    const overlayContent = document.getElementById('overlay-content');
+
+    function showOverlay(type) {
+      let title = '';
+      let content = '';
+
+      switch (type) {
+        case 'individual':
+          title = 'Declaraciones Individuales';
+          content = 'Con nuestras Declaraciones Individuales, obtendrás asesoría fiscal especializada para maximizar tus reembolsos. Revisamos cada detalle de tus ingresos y deducciones para asegurar el trámite más beneficioso para ti.';
+          break;
+        case 'corporativas':
+          title = 'Declaraciones Corporativas';
+          content = 'Te ofrecemos estrategias para optimizar la carga tributaria de tu empresa, analizar la actividad comercial y diseñar planes de ahorro fiscal, siempre cumpliendo con la normativa.';
+          break;
+        case 'problemas':
+          title = 'Resolución de Problemas con el IRS';
+          content = '¿Tienes disputas con el IRS? Nuestro equipo se encarga de representarte, negociar y resolver cualquier tipo de notificación o auditoría, sin estrés y de forma profesional.';
+          break;
+        case 'planeacion':
+          title = 'Planeación Fiscal';
+          content = 'Planifica tu futuro financiero con un plan integral y ahorra impuestos de forma inteligente. Asegura tu estabilidad económica y el crecimiento de tu patrimonio.';
+          break;
+      }
+
+      overlayTitle.textContent = title;
+      overlayContent.textContent = content;
+      overlay.classList.add('active');
+    }
+
+    function hideOverlay() {
+      overlay.classList.remove('active');
+    }
+  </script>
+
+  <!-- AOS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+  <!-- Sobre Nosotros -->
+  <section class="bg-[#F7F9FC] py-12" data-aos="fade-up">
+    <div class="container mx-auto text-center">
+      <h3 class="text-2xl font-bold">Sobre Nosotros</h3>
+      <div class="mt-4">
+        <img src="i6.jpg" alt="Equipo Taxander" class="parallax-img mx-auto rounded-lg shadow-lg w-1/2">
+      </div>
+      <p class="mt-4">En Taxander 🚀, nos especializamos en ayudar a la comunidad latina a cumplir con sus obligaciones fiscales de manera sencilla y económica. Nuestro objetivo es garantizar tu tranquilidad y maximizar tu reembolso.</p>
+    </div>
+  </section>
+
+  <!-- Más Servicios -->
+  <section class="container mx-auto py-12" data-aos="fade-up">
+    <h3 class="text-2xl font-bold text-center">Más Servicios</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Conoce tus Beneficios Fiscales</h4>
+        <p class="mt-4">¿Sabías que puedes ser elegible para el Crédito por Ingreso del Trabajo (EITC) o deducir tus gastos de educación? ¡Descubre cómo podemos ayudarte a maximizar tus beneficios!</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Evita Problemas con el IRS</h4>
+        <p class="mt-4">Presenta siempre declaraciones precisas y completas. Conserva tus recibos y registros financieros al menos por 3 años.</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Novedades Fiscales 2024</h4>
+        <p class="mt-4">En 2024, los límites para las contribuciones al plan de retiro 401(k) han aumentado. ¡Déjanos ayudarte a aprovechar estos beneficios!</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Herramientas Gratuitas</h4>
+        <p class="mt-4">Usa la herramienta de "Estado de tu Reembolso" para saber cuándo llegará tu devolución. Calcula tus retenciones con la Calculadora de Retención del IRS.</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Soluciones en Casos de Emergencia</h4>
+        <p class="mt-4">¿Recibiste una carta del IRS? ¡No entres en pánico! Te representamos ante el IRS para resolver cualquier problema rápidamente.</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold">Ayuda para Pequeños Negocios</h4>
+        <p class="mt-4">Desde créditos fiscales hasta deducciones por compras de equipo, te ayudamos a aprovechar cada beneficio disponible para tu negocio.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script for AOS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  </script>
+</body>
+</html>
+  <!-- Preguntas Frecuentes -->
+  <section class="container mx-auto py-12" data-aos="fade-up">
+    <h3 class="text-2xl font-bold text-center">Preguntas Frecuentes</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué es una declaración de impuestos?</h4>
+        <p>Es un informe que los contribuyentes presentan al IRS para informar ingresos, gastos y otros datos fiscales.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Cuándo es la fecha límite para declarar impuestos?</h4>
+        <p>Generalmente es el 15 de abril de cada año, aunque puede cambiar si cae en fin de semana o feriado.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué sucede si no declaro mis impuestos?</h4>
+        <p>Podrías enfrentar multas, intereses y acciones legales por parte del IRS.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué documentos necesito para declarar?</h4>
+        <p>Formularios W-2, 1099, recibos de gastos deducibles y otros documentos relacionados con tus ingresos y gastos.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Puedo declarar impuestos si soy extranjero?</h4>
+        <p>Sí, pero necesitas un número de identificación fiscal (ITIN o SSN).</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué es una deducción fiscal?</h4>
+        <p>Es un gasto que puedes restar de tus ingresos para reducir tu obligación tributaria.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué pasa si cometo un error en mi declaración?</h4>
+        <p>Puedes presentar una enmienda usando el formulario 1040-X.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Cómo sé si califico para un reembolso?</h4>
+        <p>Si pagaste más impuestos de los que debías, puedes calificar para un reembolso.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Qué es el crédito fiscal por hijos?</h4>
+        <p>Es un beneficio para los contribuyentes con hijos que puede reducir su factura fiscal o aumentar su reembolso.</p>
+      </div>
+      <div class="bg-blue-100 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+        <h4 class="font-bold mb-2">¿Cómo puedo pagar mis impuestos?</h4>
+        <p>Puedes pagar en línea, por correo o establecer un plan de pagos con el IRS.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="container mx-auto py-12" data-aos="fade-up">
+    <h3 class="text-2xl font-bold text-center">Testimonios</h3>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center mb-2">
+          <img src="i7.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
+          <h4 class="font-bold">Juan Pérez</h4>
+        </div>
+        <p class="text-sm">“Gracias a su ayuda, obtuve un reembolso mayor al esperado. Recomiendo 100%.”</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center mb-2">
+          <img src="i9.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
+          <h4 class="font-bold">María González</h4>
+        </div>
+        <p class="text-sm">“El proceso fue muy fácil y rápido. Me sentí acompañado en todo momento.”</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center mb-2">
+          <img src="i10.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
+          <h4 class="font-bold">Carlos López</h4>
+        </div>
+        <p class="text-sm">“Resolví un problema complicado con el IRS gracias a ellos. Excelente servicio.”</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
+        <div class="flex items-center mb-2">
+          <img src="i11.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
+          <h4 class="font-bold">Ana Martínez</h4>
+        </div>
+        <p class="text-sm">“Muy profesionales y atentos. Ahora entiendo mejor cómo manejar mis impuestos.”</p>
+      </div>
+    </div>
+  </section>
+
+ <!-- Contáctanos -->
+<section id="contacto" class="bg-[#445B83] text-white py-12">
+  <div class="container mx-auto">
+    <h3 class="text-2xl font-bold text-center">Contáctanos</h3>
+    <form action="/guardar" method="POST" class="mt-8 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-900">
+      <div class="mb-4">
+        <label for="nombre" class="block font-bold">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="correo" class="block font-bold">Correo:</label>
+        <input type="email" id="correo" name="correo" class="w-full p-2 border rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="telefono" class="block font-bold">Teléfono:</label>
+        <input type="tel" id="telefono" name="telefono" class="w-full p-2 border rounded">
+      </div>
+      <div class="mb-4">
+        <label for="fecha" class="block font-bold">Fecha y Hora:</label>
+        <input type="datetime-local" id="fecha" name="fecha" class="w-full p-2 border rounded">
+      </div>
+      <button type="submit" class="w-full bg-[#2D5080] hover:bg-[#435B83] text-white py-2 rounded">
+        Enviar
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-gray-400 py-6 text-center">
+  <p>&copy; 2025 Taxander 🚀. Todos los derechos reservados.</p>
+  <a href="#" class="text-white">Política de privacidad</a> | 
+  <a href="#" class="text-white">Términos legales</a>
+</footer>
+
+<!-- Script for AOS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    once: true,
+  });
+</script>
+</body>
+</html>
