@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -33,10 +33,9 @@
       box-shadow: none;
     }
 
-    /* Logo con esquinas curvas y sombra flotante */
     .logo-container img {
-      height: 90px;  /* 40% más pequeño respecto a 150px */
-      width: 120px;  /* 40% más pequeño respecto a 200px */
+      height: 90px;
+      width: 120px;
       border-radius: 20px; 
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -51,7 +50,13 @@
       color: white;
       margin-left: 10px;
       animation: float 2s infinite ease-in-out;
+      transition: opacity 0.3s ease;
     }
+    .header.scrolled .logo-container h1 {
+      opacity: 0;
+      visibility: hidden;
+    }
+
     @keyframes float {
       0%, 100% {
         transform: translateY(0);
@@ -217,10 +222,6 @@
 </body>
 </html>
 
-
-
-
-
   <!-- Sobre Nosotros -->
   <section class="bg-[#F7F9FC] py-12" data-aos="fade-up">
     <div class="container mx-auto text-center">
@@ -250,7 +251,7 @@
       </div>
       <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
         <h4 class="font-bold">Herramientas Gratuitas</h4>
-        <p class="mt-4">Usa la herramienta de "Estado de tu Reembolso" para saber cuándo llegará tu devolución. Calcula tus retenciones con la Calculadora de Retención del IRS.</p>
+        <p class="mt-4">Usa la herramienta de \"Estado de tu Reembolso\" para saber cuándo llegará tu devolución. Calcula tus retenciones con la Calculadora de Retención del IRS.</p>
       </div>
       <div class="bg-white rounded-lg shadow-lg p-6 text-center transform hover:scale-105 transition duration-300">
         <h4 class="font-bold">Soluciones en Casos de Emergencia</h4>
@@ -263,16 +264,6 @@
     </div>
   </section>
 
-  <!-- Script for AOS -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    AOS.init({
-      duration: 800,
-      once: true,
-    });
-  </script>
-</body>
-</html>
   <!-- Preguntas Frecuentes -->
   <section class="container mx-auto py-12" data-aos="fade-up">
     <h3 class="text-2xl font-bold text-center">Preguntas Frecuentes</h3>
@@ -320,83 +311,52 @@
     </div>
   </section>
 
-  <!-- Testimonios -->
-  <section class="container mx-auto py-12" data-aos="fade-up">
-    <h3 class="text-2xl font-bold text-center">Testimonios</h3>
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
-        <div class="flex items-center mb-2">
-          <img src="i7.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
-          <h4 class="font-bold">Juan Pérez</h4>
+  <!-- Contáctanos -->
+  <section id="contacto" class="bg-[#445B83] text-white py-12">
+    <div class="container mx-auto">
+      <h3 class="text-2xl font-bold text-center">Contáctanos</h3>
+      <form action="/guardar" method="POST" class="mt-8 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-900">
+        <div class="mb-4">
+          <label for="nombre" class="block font-bold">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" class="w-full p-2 border rounded" required>
         </div>
-        <p class="text-sm">“Gracias a su ayuda, obtuve un reembolso mayor al esperado. Recomiendo 100%.”</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
-        <div class="flex items-center mb-2">
-          <img src="i9.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
-          <h4 class="font-bold">María González</h4>
+        <div class="mb-4">
+          <label for="correo" class="block font-bold">Correo:</label>
+          <input type="email" id="correo" name="correo" class="w-full p-2 border rounded" required>
         </div>
-        <p class="text-sm">“El proceso fue muy fácil y rápido. Me sentí acompañado en todo momento.”</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
-        <div class="flex items-center mb-2">
-          <img src="i10.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
-          <h4 class="font-bold">Carlos López</h4>
+        <div class="mb-4">
+          <label for="telefono" class="block font-bold">Teléfono:</label>
+          <input type="tel" id="telefono" name="telefono" class="w-full p-2 border rounded">
         </div>
-        <p class="text-sm">“Resolví un problema complicado con el IRS gracias a ellos. Excelente servicio.”</p>
-      </div>
-      <div class="bg-white rounded-lg shadow-lg p-4 transform hover:scale-105 transition duration-300">
-        <div class="flex items-center mb-2">
-          <img src="i11.jpg" alt="Testimonio" class="rounded-full shadow-lg w-12 h-12 mr-2">
-          <h4 class="font-bold">Ana Martínez</h4>
+        <div class="mb-4">
+          <label for="fecha" class="block font-bold">Fecha y Hora:</label>
+          <input type="datetime-local" id="fecha" name="fecha" class="w-full p-2 border rounded" step="900">
         </div>
-        <p class="text-sm">“Muy profesionales y atentos. Ahora entiendo mejor cómo manejar mis impuestos.”</p>
-      </div>
+        <div class="mb-4">
+          <label for="codigo-descuento" class="block font-bold">Código de Descuento (¡aprovéchalo!):</label>
+          <input type="text" id="codigo-descuento" name="codigo-descuento" class="w-full p-2 border rounded">
+        </div>
+        <button type="submit" class="w-full bg-[#2D5080] hover:bg-[#435B83] text-white py-2 rounded">
+          Enviar
+        </button>
+      </form>
     </div>
   </section>
 
- <!-- Contáctanos -->
-<section id="contacto" class="bg-[#445B83] text-white py-12">
-  <div class="container mx-auto">
-    <h3 class="text-2xl font-bold text-center">Contáctanos</h3>
-    <form action="/guardar" method="POST" class="mt-8 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-900">
-      <div class="mb-4">
-        <label for="nombre" class="block font-bold">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" class="w-full p-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="correo" class="block font-bold">Correo:</label>
-        <input type="email" id="correo" name="correo" class="w-full p-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="telefono" class="block font-bold">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" class="w-full p-2 border rounded">
-      </div>
-      <div class="mb-4">
-        <label for="fecha" class="block font-bold">Fecha y Hora:</label>
-        <input type="datetime-local" id="fecha" name="fecha" class="w-full p-2 border rounded">
-      </div>
-      <button type="submit" class="w-full bg-[#2D5080] hover:bg-[#435B83] text-white py-2 rounded">
-        Enviar
-      </button>
-    </form>
-  </div>
-</section>
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 py-6 text-center">
+    <p>&copy; 2025 Taxander 🚀. Todos los derechos reservados.</p>
+    <a href="#" class="text-white">Política de privacidad</a> | 
+    <a href="#" class="text-white">Términos legales</a>
+  </footer>
 
-<!-- Footer -->
-<footer class="bg-gray-800 text-gray-400 py-6 text-center">
-  <p>&copy; 2025 Taxander 🚀. Todos los derechos reservados.</p>
-  <a href="#" class="text-white">Política de privacidad</a> | 
-  <a href="#" class="text-white">Términos legales</a>
-</footer>
-
-<!-- Script for AOS -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 800,
-    once: true,
-  });
-</script>
+  <!-- Script for AOS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  </script>
 </body>
 </html>
