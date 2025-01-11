@@ -1,13 +1,24 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors'); // Importar CORS
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+// Configuración de CORS
+app.use(cors({
+  origin: 'https://tupaginaweb.com', // Reemplaza con la URL de tu página web
+  methods: ['GET', 'POST'], // Métodos permitidos
+}));
 
+// Middleware para analizar datos en formato URL y JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Ruta para manejar la solicitud POST y guardar datos
 app.post('/guardar', (req, res) => {
   const { nombre, correo, telefono, fecha } = req.body;
 
@@ -21,12 +32,13 @@ app.post('/guardar', (req, res) => {
   fs.appendFile('datos.txt', linea, (err) => {
     if (err) {
       console.error('Error al guardar datos:', err);
-      return res.send('Hubo un error guardando tus datos.');
+      return res.status(500).send('Hubo un error guardando tus datos.');
     }
-    res.send('¡Datos guardados correctamente!');
+    res.status(200).send('¡Datos guardados correctamente!');
   });
 });
 
+// Configuración del puerto
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
