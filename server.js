@@ -1,39 +1,35 @@
-
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/miBaseDeDatos', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    console.log('Conexión exitosa a MongoDB');
-  })
-  .catch((error) => {
-    console.log('Error al conectar a MongoDB:', error);
-  });
-
-const UsuarioSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  edad: { type: Number, required: true },
-  fechaCreacion: { type: Date, default: Date.now },
-});
-
-const Usuario = mongoose.model('Usuario', UsuarioSchema);
-
-app.post('/usuarios', async (req, res) => {
+app.post('/guardar-datos', async (req, res) => {
   try {
-    const nuevoUsuario = new Usuario(req.body); // Crear usuario con los datos recibidos
-    await nuevoUsuario.save(); // Guardar usuario en la base de datos
-    res.status(201).send('Usuario creado exitosamente');
+    // Extraer los datos del cuerpo de la solicitud
+    const { nombre, correo, telefono, estado, fechaHora, descuento } = req.body;
+
+    // Formatear los datos para guardar en un archivo
+    const datos = `Nombre: ${nombre}, Correo: ${correo}, Teléfono: ${telefono}, Estado: ${estado}, Fecha: ${fechaHora}, Código: ${descuento}\n`;
+
+    // Agregar los datos al archivo `datos.txt`
+    fs.appendFileSync('./datos.txt', datos, 'utf8');
+
+    // Realizar commit y push al repositorio
+    exec('git add datos.txt && git commit -m "Actualización de datos" && git push', (err, stdout, stderr) => {
+      if (err) {
+        console.error('Error al ejecutar los comandos de Git:', stderr);
+        return res.status(500).send('Error al guardar datos en GitHub');
+      }
+      console.log('Salida de Git:', stdout);
+      res.status(201).send('Datos guardados y sincronizados con GitHub');
+    });
   } catch (error) {
-    res.status(400).send(`Error al crear usuario: ${error.message}`);
+    console.error('Error al guardar datos:', error);
+    res.status(500).send('Error al guardar datos');
   }
 });
 
