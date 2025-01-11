@@ -1,45 +1,42 @@
+
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const cors = require('cors'); // Importar CORS
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-// Configuración de CORS
-app.use(cors({
-  origin: 'https://tupaginaweb.com', // Reemplaza con la URL de tu página web
-  methods: ['GET', 'POST'], // Métodos permitidos
-}));
+app.use(bodyParser.json());
 
-// Middleware para analizar datos en formato URL y JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Ruta para manejar la solicitud POST y guardar datos
-app.post('/guardar', (req, res) => {
-  const { nombre, correo, telefono, fecha } = req.body;
-
-  console.log('--- Datos recibidos ---');
-  console.log('Nombre:', nombre);
-  console.log('Correo:', correo);
-  console.log('Teléfono:', telefono);
-  console.log('Fecha:', fecha);
-
-  const linea = `Nombre: ${nombre}, Correo: ${correo}, Teléfono: ${telefono}, Fecha: ${fecha}\n`;
-  fs.appendFile('datos.txt', linea, (err) => {
-    if (err) {
-      console.error('Error al guardar datos:', err);
-      return res.status(500).send('Hubo un error guardando tus datos.');
-    }
-    res.status(200).send('¡Datos guardados correctamente!');
+mongoose.connect('mongodb://localhost:27017/miBaseDeDatos', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('Conexión exitosa a MongoDB');
+  })
+  .catch((error) => {
+    console.log('Error al conectar a MongoDB:', error);
   });
+
+const UsuarioSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  edad: { type: Number, required: true },
+  fechaCreacion: { type: Date, default: Date.now },
 });
 
-// Configuración del puerto
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+const Usuario = mongoose.model('Usuario', UsuarioSchema);
+
+app.post('/usuarios', async (req, res) => {
+  try {
+    const nuevoUsuario = new Usuario(req.body); // Crear usuario con los datos recibidos
+    await nuevoUsuario.save(); // Guardar usuario en la base de datos
+    res.status(201).send('Usuario creado exitosamente');
+  } catch (error) {
+    res.status(400).send(`Error al crear usuario: ${error.message}`);
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Servidor escuchando en https://taxander-node.onrender.com');
 });
