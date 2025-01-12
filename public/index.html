@@ -491,7 +491,7 @@
 <section class="bg-black py-12 mt-12 mb-12 overflow-hidden relative" data-aos="fade-up">
   <div class="container mx-auto text-center">
     <h3 class="text-2xl font-bold text-white mb-6">Testimonios</h3>
-    <div class="flex animate-scroll items-center space-x-4 overflow-hidden">
+    <div class="flex animate-scroll items-center space-x-4">
       <!-- Testimonio 1 -->
       <div class="testimonial-card">
         <img src="images/i7.jpg" alt="Juan Pérez" class="w-12 h-12 mx-auto rounded-full mb-2">
@@ -580,7 +580,7 @@
   .animate-scroll {
     display: flex;
     animation: scroll 20s linear infinite;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Controla el desbordamiento */
   }
 
   .animate-scroll:hover {
@@ -604,6 +604,7 @@
 
   @media (max-width: 768px) {
     .animate-scroll {
+      flex-wrap: nowrap;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
     }
