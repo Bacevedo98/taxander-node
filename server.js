@@ -6,11 +6,15 @@ const path = require('path');
 
 const app = express();
 
+// Middleware para analizar el cuerpo de las solicitudes
 app.use(bodyParser.json());
+
+// Configurar la carpeta 'public' como estática
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Ruta para manejar solicitudes GET en la raíz del servidor
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Asegúrate de tener un archivo index.html en la carpeta 'public'
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Sirve el archivo index.html
 });
 
 // Ruta para guardar datos enviados al servidor
@@ -20,7 +24,7 @@ app.post('/guardar-datos', async (req, res) => {
         const { nombre, correo, telefono, estado, fechaHora, descuento } = req.body;
 
         // Formatear los datos para guardar en un archivo
-        const datos = `Nombre: ${nombre}, Correo: ${correo}, Teléfono: ${telefono}, Estado: ${estado}, Fecha: ${fechaHora}, Código: ${descuento}\n`;
+        const datos = `Nombre: ${nombre}, Correo: ${correo}, Teléfono: ${telefono}, Estado: ${estado}, Fecha y Hora: ${fechaHora}, Código de Descuento: ${descuento}\n`;
 
         // Agregar los datos al archivo `datos.txt`
         fs.appendFileSync('./datos.txt', datos, 'utf8');
