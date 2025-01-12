@@ -288,7 +288,7 @@
           <label for="state" class="block text-gray-700 font-bold mb-2">Estado:</label>
           <select id="state" name="state" class="w-full p-3 border rounded-md" required>
             <option value="" disabled selected>Selecciona tu estado</option>
-            <option value="CA">California</option>
+             <option value="CA">California</option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -343,7 +343,6 @@
         </div>
         <!-- Dependientes -->
         <div>
-
           <label for="dependents" class="block text-gray-700 font-bold mb-2">Dependientes:</label>
           <input type="number" id="dependents" name="dependents" class="w-full p-3 border rounded-md" min="0" required>
         </div>
@@ -370,13 +369,17 @@
         <h3 class="text-2xl font-bold text-gray-800 mb-4">Resultados</h3>
         <ul class="text-gray-700">
           <li><strong>Salario Bruto:</strong> $<span id="resultIncome"></span></li>
+          <li><strong>Impuestos Federales:</strong> $<span id="resultFederalTax"></span></li>
+          <li><strong>Impuestos Estatales:</strong> $<span id="resultStateTax"></span></li>
+          <li><strong>Seguro Social:</strong> $<span id="resultSocialSecurityTax"></span></li>
+          <li><strong>Medicare:</strong> $<span id="resultMedicareTax"></span></li>
           <li><strong>Impuestos Totales:</strong> $<span id="resultTotalTaxes"></span></li>
           <li><strong>Salario Neto:</strong> $<span id="resultNetIncome"></span></li>
-          <li><strong>Tasa Impositiva Marginal:</strong> <span id="resultMarginalRate"></span>%</li>
           <li><strong>Tasa Impositiva Promedio:</strong> <span id="resultAverageRate"></span>%</li>
+          <li><strong>Tasa Impositiva Marginal:</strong> <span id="resultMarginalRate"></span>%</li>
         </ul>
         <div class="flex justify-center mt-6">
-          <canvas id="taxChart" style="width: 60px; height: 60px;"></canvas> <!-- Gráfica -->
+          <canvas id="taxChart" style="width: 60px; height: 60px;"></canvas>
         </div>
       </div>
     </form>
@@ -405,38 +408,48 @@
 
     // Deducciones estándar
     let deduction = 0;
-    if (filingStatus === "single") deduction = 15000;
-    if (filingStatus === "married") deduction = 30000;
-    if (filingStatus === "head") deduction = 22500;
+    if (filingStatus === "single") deduction = 13850;
+    if (filingStatus === "married") deduction = 27700;
+    if (filingStatus === "head") deduction = 20800;
 
-    // Impuestos federales (simplificados)
+    // Impuestos federales (tablas simplificadas)
     const taxableIncome = Math.max(0, grossIncome - deduction - dependents * 2000);
-    const federalTax = taxableIncome * 0.22; // Tasa promedio aproximada
+    let federalTax = 0;
+    if (taxableIncome <= 10275) federalTax = taxableIncome * 0.10;
+    else if (taxableIncome <= 41775) federalTax = 1027.5 + (taxableIncome - 10275) * 0.12;
+    else if (taxableIncome <= 89075) federalTax = 4807.5 + (taxableIncome - 41775) * 0.22;
+    else federalTax = 15213.5 + (taxableIncome - 89075) * 0.24;
 
-    // Impuestos estatales
+    // Impuestos estatales (ejemplo para CA)
     let stateTax = 0;
     if (state === "CA") {
-      stateTax = taxableIncome * 0.07; // Ejemplo: tasa promedio en California
+      if (taxableIncome <= 9325) stateTax = taxableIncome * 0.01;
+      else if (taxableIncome <= 22107) stateTax = 93.25 + (taxableIncome - 9325) * 0.02;
+      else stateTax = 348.89 + (taxableIncome - 22107) * 0.04;
     }
 
-    // Contribuciones al Seguro Social y Medicare
-    const socialSecurityTax = Math.min(grossIncome, 176200) * 0.062;
+    // Seguro Social y Medicare
+    const socialSecurityTax = Math.min(grossIncome, 160200) * 0.062;
     const medicareTax = grossIncome * 0.0145;
 
-    // Cálculo de impuestos totales y salario neto
+    // Impuestos totales y salario neto
     const totalTaxes = federalTax + stateTax + socialSecurityTax + medicareTax + additionalContributions;
     const netIncome = grossIncome - totalTaxes;
 
     // Tasas impositivas
     const averageRate = (totalTaxes / grossIncome) * 100;
-    const marginalRate = 22; // Ajustar según tablas reales
+    const marginalRate = (federalTax / taxableIncome) * 100;
 
     // Mostrar resultados
     document.getElementById("resultIncome").innerText = grossIncome.toFixed(2);
+    document.getElementById("resultFederalTax").innerText = federalTax.toFixed(2);
+    document.getElementById("resultStateTax").innerText = stateTax.toFixed(2);
+    document.getElementById("resultSocialSecurityTax").innerText = socialSecurityTax.toFixed(2);
+    document.getElementById("resultMedicareTax").innerText = medicareTax.toFixed(2);
     document.getElementById("resultTotalTaxes").innerText = totalTaxes.toFixed(2);
     document.getElementById("resultNetIncome").innerText = netIncome.toFixed(2);
-    document.getElementById("resultMarginalRate").innerText = marginalRate.toFixed(1);
-    document.getElementById("resultAverageRate").innerText = averageRate.toFixed(1);
+    document.getElementById("resultAverageRate").innerText = averageRate.toFixed(2);
+    document.getElementById("resultMarginalRate").innerText = marginalRate.toFixed(2);
 
     document.getElementById("result").classList.remove("hidden");
 
