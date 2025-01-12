@@ -491,7 +491,7 @@
 <section class="bg-black py-12 mt-12 mb-12 overflow-hidden relative" data-aos="fade-up">
   <div class="container mx-auto text-center">
     <h3 class="text-2xl font-bold text-white mb-6">Testimonios</h3>
-    <div class="flex space-x-4 animate-scroll">
+    <div class="flex animate-scroll items-center space-x-4 overflow-hidden">
       <!-- Testimonio 1 -->
       <div class="testimonial-card">
         <img src="images/i7.jpg" alt="Juan Pérez" class="w-12 h-12 mx-auto rounded-full mb-2">
@@ -568,6 +568,7 @@
 
 <!-- Estilos adicionales para animación -->
 <style>
+  /* Animación para el scroll */
   @keyframes scroll {
     0% {
       transform: translateX(0);
@@ -579,45 +580,46 @@
 
   .animate-scroll {
     display: flex;
-    animation: scroll 13s linear infinite; /* Movimiento más lento */
+    animation: scroll 15s linear infinite; /* Duración ajustada para mayor fluidez */
+    overflow-x: hidden; /* Evita el overflow */
   }
 
   .animate-scroll:hover {
-    animation-play-state: paused;
+    animation-play-state: paused; /* Pausar animación al pasar el cursor */
   }
 
   .testimonial-card {
-    background-color: #ebf8ff; /* bg-blue-100 */
-    border-radius: 0.5rem; /* rounded-lg */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
-    padding: 1rem; /* p-4 */
+    background-color: #ebf8ff; /* Fondo */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+    padding: 1rem; /* Espaciado interno */
     transform: scale(1);
     transition: transform 0.3s;
     cursor: pointer;
     flex-shrink: 0;
-    width: calc(25% - 1rem); /* Para computadoras */
+    width: 25%; /* Tamaño en escritorio */
   }
 
   .testimonial-card:hover {
-    transform: scale(1.2); /* hover:scale-[1.2] */
+    transform: scale(1.1); /* Efecto hover */
   }
 
   @media (max-width: 768px) {
     .animate-scroll {
       flex-wrap: nowrap;
       overflow-x: auto;
-      scroll-snap-type: x mandatory; /* Permite un desplazamiento más fluido */
+      scroll-snap-type: x mandatory; /* Desplazamiento fluido */
     }
 
     .testimonial-card {
-      width: 70%; /* Ajusta el ancho en móvil */
-      margin: 0 1rem; /* Espaciado lateral */
+      width: 80%; /* Ajuste en móviles */
+      margin: 0 1rem; /* Espaciado entre tarjetas */
       flex-shrink: 0;
-      scroll-snap-align: center; /* Alineación para el scroll */
+      scroll-snap-align: center; /* Centrar tarjeta al desplazarse */
     }
 
     .testimonial-card:hover {
-      transform: scale(1.05); /* Reduce el efecto hover en pantallas pequeñas */
+      transform: scale(1); /* Eliminar hover en móviles */
     }
   }
 </style>
