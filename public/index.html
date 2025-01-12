@@ -288,12 +288,11 @@
           <label for="state" class="block text-gray-700 font-bold mb-2">Estado:</label>
           <select id="state" name="state" class="w-full p-3 border rounded-md" required>
             <option value="" disabled selected>Selecciona tu estado</option>
-             <option value="CA">California</option>
+            <option value="CA">California</option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
             <option value="AR">Arkansas</option>
-            <option value="CA">California</option>
             <option value="CO">Colorado</option>
             <option value="CT">Connecticut</option>
             <option value="DE">Delaware</option>
@@ -394,6 +393,20 @@
 <script>
   let taxChartInstance;
 
+  const stateTaxRates = {
+    const stateTaxRates = {
+  AL: 0.05, AK: 0.00, AZ: 0.045, AR: 0.049, CA: 0.093, CO: 0.0455,
+  CT: 0.05, DE: 0.052, FL: 0.00, GA: 0.0575, HI: 0.08, ID: 0.06125,
+  IL: 0.0495, IN: 0.03, IA: 0.0414, KS: 0.057, KY: 0.05, LA: 0.03,
+  ME: 0.0715, MD: 0.0475, MA: 0.05, MI: 0.0425, MN: 0.068, MS: 0.05,
+  MO: 0.054, MT: 0.065, NE: 0.0684, NV: 0.00, NH: 0.00, NJ: 0.0637,
+  NM: 0.049, NY: 0.0641, NC: 0.0525, ND: 0.0227, OH: 0.0497, OK: 0.05,
+  OR: 0.0875, PA: 0.0307, RI: 0.0395, SC: 0.07, SD: 0.00, TN: 0.00,
+  TX: 0.00, UT: 0.0495, VT: 0.068, VA: 0.0575, WA: 0.00, WV: 0.065,
+  WI: 0.053, WY: 0.00
+
+  };
+
   document.getElementById("calculateButton").addEventListener("click", function () {
     const grossIncome = parseFloat(document.getElementById("grossIncome").value);
     const dependents = parseInt(document.getElementById("dependents").value, 10) || 0;
@@ -412,35 +425,30 @@
     if (filingStatus === "married") deduction = 27700;
     if (filingStatus === "head") deduction = 20800;
 
-    // Impuestos federales (tablas simplificadas)
-    const taxableIncome = Math.max(0, grossIncome - deduction - dependents * 2000);
+    const dependentDeduction = dependents * 2000;
+    const taxableIncome = Math.max(0, grossIncome - deduction - dependentDeduction);
+
+    // Impuestos federales
     let federalTax = 0;
     if (taxableIncome <= 10275) federalTax = taxableIncome * 0.10;
     else if (taxableIncome <= 41775) federalTax = 1027.5 + (taxableIncome - 10275) * 0.12;
     else if (taxableIncome <= 89075) federalTax = 4807.5 + (taxableIncome - 41775) * 0.22;
     else federalTax = 15213.5 + (taxableIncome - 89075) * 0.24;
 
-    // Impuestos estatales (ejemplo para CA)
-    let stateTax = 0;
-    if (state === "CA") {
-      if (taxableIncome <= 9325) stateTax = taxableIncome * 0.01;
-      else if (taxableIncome <= 22107) stateTax = 93.25 + (taxableIncome - 9325) * 0.02;
-      else stateTax = 348.89 + (taxableIncome - 22107) * 0.04;
-    }
+    // Impuestos estatales
+    const stateTaxRate = stateTaxRates[state] || 0;
+    const stateTax = taxableIncome * stateTaxRate;
 
     // Seguro Social y Medicare
     const socialSecurityTax = Math.min(grossIncome, 160200) * 0.062;
     const medicareTax = grossIncome * 0.0145;
 
-    // Impuestos totales y salario neto
     const totalTaxes = federalTax + stateTax + socialSecurityTax + medicareTax + additionalContributions;
     const netIncome = grossIncome - totalTaxes;
 
-    // Tasas impositivas
     const averageRate = (totalTaxes / grossIncome) * 100;
     const marginalRate = (federalTax / taxableIncome) * 100;
 
-    // Mostrar resultados
     document.getElementById("resultIncome").innerText = grossIncome.toFixed(2);
     document.getElementById("resultFederalTax").innerText = federalTax.toFixed(2);
     document.getElementById("resultStateTax").innerText = stateTax.toFixed(2);
@@ -453,10 +461,10 @@
 
     document.getElementById("result").classList.remove("hidden");
 
-    // Actualizar gráfica
     if (taxChartInstance) {
       taxChartInstance.destroy();
     }
+
     const ctx = document.getElementById("taxChart").getContext("2d");
     taxChartInstance = new Chart(ctx, {
       type: "doughnut",
@@ -478,6 +486,7 @@
     });
   });
 </script>
+
 
 
 
