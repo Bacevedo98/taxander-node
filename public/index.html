@@ -390,6 +390,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  let taxChartInstance;
+
   const stateTaxRates = {
     AL: 0.05, AK: 0.00, AZ: 0.045, AR: 0.049, CA: 0.093, CO: 0.0455,
     CT: 0.05, DE: 0.052, FL: 0.00, GA: 0.0575, HI: 0.08, ID: 0.06125,
@@ -409,23 +411,19 @@
     const additionalContributions = parseFloat(document.getElementById("additionalContributions").value) || 0;
     const state = document.getElementById("state").value;
 
-    if (!grossIncome || !filingStatus || grossIncome < 0 || dependents < 0) {
+    if (!grossIncome || grossIncome < 0 || !state || !filingStatus) {
       alert("Por favor, completa todos los campos correctamente.");
       return;
     }
 
-    let deduction = 0;
-    if (filingStatus === "single") deduction = 13850;
-    if (filingStatus === "married") deduction = 27700;
-    if (filingStatus === "head") deduction = 20800;
+    let deduction = filingStatus === "single" ? 13850 :
+                    filingStatus === "married" ? 27700 : 20800;
 
     const taxableIncome = Math.max(0, grossIncome - deduction - dependents * 2000);
-
-    let federalTax = 0;
-    if (taxableIncome <= 10275) federalTax = taxableIncome * 0.10;
-    else if (taxableIncome <= 41775) federalTax = 1027.5 + (taxableIncome - 10275) * 0.12;
-    else if (taxableIncome <= 89075) federalTax = 4807.5 + (taxableIncome - 41775) * 0.22;
-    else federalTax = 15213.5 + (taxableIncome - 89075) * 0.24;
+    const federalTax = taxableIncome <= 10275 ? taxableIncome * 0.10 :
+                       taxableIncome <= 41775 ? 1027.5 + (taxableIncome - 10275) * 0.12 :
+                       taxableIncome <= 89075 ? 4807.5 + (taxableIncome - 41775) * 0.22 :
+                       15213.5 + (taxableIncome - 89075) * 0.24;
 
     const stateTax = (stateTaxRates[state] || 0) * taxableIncome;
     const socialSecurityTax = Math.min(grossIncome, 160200) * 0.062;
