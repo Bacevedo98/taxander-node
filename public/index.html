@@ -288,7 +288,7 @@
           <label for="state" class="block text-gray-700 font-bold mb-2">Estado:</label>
           <select id="state" name="state" class="w-full p-3 border rounded-md" required>
             <option value="" disabled selected>Selecciona tu estado</option>
-            <!-- Lista completa de estados -->
+            <option value="CA">California</option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -343,6 +343,7 @@
         </div>
         <!-- Dependientes -->
         <div>
+
           <label for="dependents" class="block text-gray-700 font-bold mb-2">Dependientes:</label>
           <input type="number" id="dependents" name="dependents" class="w-full p-3 border rounded-md" min="0" required>
         </div>
@@ -356,6 +357,11 @@
             <option value="head">Jefe de familia</option>
           </select>
         </div>
+        <!-- Contribuciones adicionales -->
+        <div>
+          <label for="additionalContributions" class="block text-gray-700 font-bold mb-2">Contribuciones adicionales (SDI, etc.):</label>
+          <input type="number" id="additionalContributions" name="additionalContributions" class="w-full p-3 border rounded-md" min="0" step="0.01">
+        </div>
       </div>
       <button type="button" id="calculateButton" class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg">
         Calcular
@@ -363,14 +369,14 @@
       <div id="result" class="mt-8 bg-gray-100 p-6 rounded-lg shadow-lg hidden">
         <h3 class="text-2xl font-bold text-gray-800 mb-4">Resultados</h3>
         <ul class="text-gray-700">
-          <li><strong>Ingreso Bruto:</strong> $<span id="resultIncome"></span></li>
-          <li><strong>Deducciones Estándar:</strong> $<span id="resultDeductions"></span></li>
-          <li><strong>Ingreso Imponible:</strong> $<span id="resultTaxableIncome"></span></li>
-          <li><strong>Impuestos Estimados:</strong> $<span id="resultTax"></span></li>
-          <li><strong>Reembolso Estimado:</strong> $<span id="resultRefund"></span></li>
+          <li><strong>Salario Bruto:</strong> $<span id="resultIncome"></span></li>
+          <li><strong>Impuestos Totales:</strong> $<span id="resultTotalTaxes"></span></li>
+          <li><strong>Salario Neto:</strong> $<span id="resultNetIncome"></span></li>
+          <li><strong>Tasa Impositiva Marginal:</strong> <span id="resultMarginalRate"></span>%</li>
+          <li><strong>Tasa Impositiva Promedio:</strong> <span id="resultAverageRate"></span>%</li>
         </ul>
         <div class="flex justify-center mt-6">
-          <canvas id="taxChart" style="width: 60px; height: 60px;"></canvas> <!-- Gráfica pequeña -->
+          <canvas id="taxChart" style="width: 60px; height: 60px;"></canvas> <!-- Gráfica -->
         </div>
       </div>
     </form>
@@ -380,7 +386,7 @@
   </div>
 </section>
 
-<!-- Script para calcular y mostrar gráfica -->
+<!-- Script para cálculos y gráfica -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   let taxChartInstance;
@@ -389,42 +395,62 @@
     const grossIncome = parseFloat(document.getElementById("grossIncome").value);
     const dependents = parseInt(document.getElementById("dependents").value, 10) || 0;
     const filingStatus = document.getElementById("filingStatus").value;
+    const additionalContributions = parseFloat(document.getElementById("additionalContributions").value) || 0;
+    const state = document.getElementById("state").value;
 
     if (!grossIncome || !filingStatus || grossIncome < 0 || dependents < 0) {
       alert("Por favor, completa todos los campos correctamente.");
       return;
     }
 
+    // Deducciones estándar
     let deduction = 0;
-    let taxRate = 0.22;
+    if (filingStatus === "single") deduction = 15000;
+    if (filingStatus === "married") deduction = 30000;
+    if (filingStatus === "head") deduction = 22500;
 
-    if (filingStatus === "single") deduction = 13850;
-    if (filingStatus === "married") deduction = 27700;
-    if (filingStatus === "head") deduction = 20800;
-
+    // Impuestos federales (simplificados)
     const taxableIncome = Math.max(0, grossIncome - deduction - dependents * 2000);
-    const estimatedTax = taxableIncome * taxRate;
-    const refundEstimate = Math.max(0, grossIncome * 0.1 - estimatedTax);
+    const federalTax = taxableIncome * 0.22; // Tasa promedio aproximada
 
+    // Impuestos estatales
+    let stateTax = 0;
+    if (state === "CA") {
+      stateTax = taxableIncome * 0.07; // Ejemplo: tasa promedio en California
+    }
+
+    // Contribuciones al Seguro Social y Medicare
+    const socialSecurityTax = Math.min(grossIncome, 176200) * 0.062;
+    const medicareTax = grossIncome * 0.0145;
+
+    // Cálculo de impuestos totales y salario neto
+    const totalTaxes = federalTax + stateTax + socialSecurityTax + medicareTax + additionalContributions;
+    const netIncome = grossIncome - totalTaxes;
+
+    // Tasas impositivas
+    const averageRate = (totalTaxes / grossIncome) * 100;
+    const marginalRate = 22; // Ajustar según tablas reales
+
+    // Mostrar resultados
     document.getElementById("resultIncome").innerText = grossIncome.toFixed(2);
-    document.getElementById("resultDeductions").innerText = deduction.toFixed(2);
-    document.getElementById("resultTaxableIncome").innerText = taxableIncome.toFixed(2);
-    document.getElementById("resultTax").innerText = estimatedTax.toFixed(2);
-    document.getElementById("resultRefund").innerText = refundEstimate.toFixed(2);
+    document.getElementById("resultTotalTaxes").innerText = totalTaxes.toFixed(2);
+    document.getElementById("resultNetIncome").innerText = netIncome.toFixed(2);
+    document.getElementById("resultMarginalRate").innerText = marginalRate.toFixed(1);
+    document.getElementById("resultAverageRate").innerText = averageRate.toFixed(1);
 
     document.getElementById("result").classList.remove("hidden");
 
+    // Actualizar gráfica
     if (taxChartInstance) {
       taxChartInstance.destroy();
     }
-
     const ctx = document.getElementById("taxChart").getContext("2d");
     taxChartInstance = new Chart(ctx, {
       type: "doughnut",
       data: {
-        labels: ["Impuestos Estimados", "Reembolso Estimado"],
+        labels: ["Impuestos Totales", "Salario Neto"],
         datasets: [{
-          data: [estimatedTax, refundEstimate],
+          data: [totalTaxes, netIncome],
           backgroundColor: ["#FF6384", "#36A2EB"],
         }]
       },
@@ -439,6 +465,7 @@
     });
   });
 </script>
+
 
 
   <!-- Preguntas Frecuentes -->
