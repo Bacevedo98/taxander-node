@@ -1,3 +1,1 @@
-Nombre: ey ou yy, Correo: dad@gmail.com, Teléfono: dada, Fecha: 2025-02-13T14:48
-Nombre: wilmer, Correo: fafa@gmail.com, Teléfono: 7033570778, Fecha: 2025-01-21T01:58
-Nombre: Juan, Correo: juan@example.com, Teléfono: 1234567890, Estado: activo, Fecha: 2025-01-11T12:00:00, Código: 10%
+
