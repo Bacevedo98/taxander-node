@@ -6,8 +6,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000; // Usar el puerto asignado por Render o 3000 por defecto
 
-// Middleware para analizar JSON y servir archivos estáticos
+// Middleware para analizar JSON y datos de formularios
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // Agregado para manejar formularios
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Log para mostrar el directorio actual
@@ -33,6 +34,7 @@ app.post('/submit', (req, res) => {
         // Guardar los datos en un archivo llamado datos.txt en el directorio actual
         const filePath = path.join(__dirname, 'datos.txt');
         fs.appendFileSync(filePath, datos, 'utf8');
+
         console.log('Datos guardados en:', filePath);
 
         // Enviar respuesta de éxito
