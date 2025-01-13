@@ -762,12 +762,19 @@
 
 <!-- Script para combinar fecha y hora -->
 <script>
-  document.querySelector("form").addEventListener("submit", function (event) {
-    const form = event.target;
-
+  // Seleccionar específicamente el formulario de acción "/submit"
+  const form = document.querySelector("form[action='/submit']");
+  form.addEventListener("submit", function (event) {
     // Combina fecha y hora en un solo campo
     const fecha = form.querySelector("#fecha").value;
     const hora = form.querySelector("#hora").value;
+
+    // Verifica si fecha y hora están seleccionadas
+    if (!fecha || !hora) {
+      alert("Por favor, selecciona una fecha y una hora.");
+      event.preventDefault(); // Evita el envío si faltan datos
+      return;
+    }
 
     // Agrega un nuevo input oculto con el valor combinado
     const fechaHoraInput = document.createElement("input");
@@ -775,18 +782,12 @@
     fechaHoraInput.name = "fechaHora";
     fechaHoraInput.value = `${fecha} ${hora}`;
     form.appendChild(fechaHoraInput);
+
+    // Mostrar los datos en la consola para verificar antes del envío
+    console.log("Formulario enviado con los siguientes datos:");
+    console.log(new FormData(form));
   });
 </script>
-
-<!-- Script for AOS -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 800,
-    once: true,
-  });
-</script>
-
 </body>
 </html>
 
