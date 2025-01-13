@@ -752,12 +752,31 @@
   </div>
 </section>
 
+...
 <!-- Footer -->
 <footer class="bg-gray-800 text-gray-400 py-6 text-center">
   <p>&copy; 2025 Taxander 🚀. Todos los derechos reservados.</p>
   <a href="#" class="text-white">Política de privacidad</a> | 
   <a href="#" class="text-white">Términos legales</a>
 </footer>
+
+<!-- Script para combinar fecha y hora -->
+<script>
+  document.querySelector("form").addEventListener("submit", function (event) {
+    const form = event.target;
+
+    // Combina fecha y hora en un solo campo
+    const fecha = form.querySelector("#fecha").value;
+    const hora = form.querySelector("#hora").value;
+
+    // Agrega un nuevo input oculto con el valor combinado
+    const fechaHoraInput = document.createElement("input");
+    fechaHoraInput.type = "hidden";
+    fechaHoraInput.name = "fechaHora";
+    fechaHoraInput.value = `${fecha} ${hora}`;
+    form.appendChild(fechaHoraInput);
+  });
+</script>
 
 <!-- Script for AOS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
@@ -767,3 +786,7 @@
     once: true,
   });
 </script>
+
+</body>
+</html>
+

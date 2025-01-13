@@ -21,11 +21,11 @@ app.get('/', (req, res) => {
 // Ruta para manejar los datos del formulario
 app.post('/submit', (req, res) => {
     try {
+        // Verificar que los datos se recibieron correctamente
+        console.log('Datos recibidos en el servidor:', req.body);
+
         // Extraer los datos del cuerpo de la solicitud
         const { nombre, correo, telefono, estado, fechaHora, descuento } = req.body;
-
-        // Verificar que los datos se recibieron correctamente
-        console.log('Datos recibidos:', req.body);
 
         // Formatear los datos para guardarlos en un archivo
         const datos = `Nombre: ${nombre}, Correo: ${correo}, Teléfono: ${telefono}, Estado: ${estado}, Fecha y Hora: ${fechaHora}, Descuento: ${descuento}\n`;
