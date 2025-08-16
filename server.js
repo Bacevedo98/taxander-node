@@ -16,7 +16,7 @@ console.log('Directorio actual:', __dirname);
 
 // Ruta para servir el archivo index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index-en.html'));
 });
 
 // Ruta para manejar los datos del formulario
