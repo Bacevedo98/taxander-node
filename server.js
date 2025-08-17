@@ -9,14 +9,14 @@ const PORT = process.env.PORT || 3000; // Usar el puerto asignado por Render o 3
 // Middleware para analizar JSON y datos de formularios
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // Agregado para manejar formularios
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'docs')));
 
 // Log para mostrar el directorio actual
 console.log('Directorio actual:', __dirname);
 
 // Ruta para servir el archivo index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index-en.html'));
+    res.sendFile(path.join(__dirname, 'docs', 'index-en.html'));
 });
 
 // Ruta para manejar los datos del formulario
